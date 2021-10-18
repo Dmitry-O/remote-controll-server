@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('./cors');
 
 const Controller = require('../models/controllers');
 
@@ -8,7 +9,8 @@ const controllerRouter = express.Router();
 controllerRouter.use(bodyParser.json());
 
 controllerRouter.route('/')
-.get((req, res, next) => {
+    .options(cors.corsWithOptions, (req, res) => {res.sendStatus(200);})
+    .get(cors.corsWithOptions, (req, res, next) => {
     Controller.findOne({serial: req.body.serial, password: req.body.password})
         .then(controller => {
             res.statusCode = 200;
@@ -17,7 +19,7 @@ controllerRouter.route('/')
         }, err => next(err))
         .catch(err => next(err));
 })
-.post((req, res, next) => {
+.post(cors.corsWithOptions, (req, res, next) => {
     Controller.findOne({serial: req.body.serial, password: req.body.password})
         .then(controller => {
             if (!controller) {
@@ -28,11 +30,15 @@ controllerRouter.route('/')
                         res.json(controller);
                     }, err => next(err))
                     .catch(err => next(err));
+            } else {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(controller);
             }
         }, err => next(err))
         .catch(err => next(err));
 })
-.put((req, res, next) => {
+.put(cors.corsWithOptions, (req, res, next) => {
     Controller.findOne({serial: req.body.serial, password: req.body.password})
         .then(controller => {
             if (controller) {
