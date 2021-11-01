@@ -9,8 +9,8 @@ const controllerRouter = express.Router();
 controllerRouter.use(bodyParser.json());
 
 controllerRouter.route('/')
-    .options(cors.corsWithOptions, (req, res) => {res.sendStatus(200);})
-    .get(cors.corsWithOptions, (req, res, next) => {
+.options(cors.corsWithOptions, (req, res) => {res.sendStatus(200);})
+.get(cors.corsWithOptions, (req, res, next) => {
     Controller.findOne({serial: req.body.serial, password: req.body.password})
         .then(controller => {
             res.statusCode = 200;
@@ -54,5 +54,17 @@ controllerRouter.route('/')
         }, err => next(err))
         .catch(err => next(err));
 });
+
+controllerRouter.route('/:serial')
+.options(cors.corsWithOptions, (req, res) => {res.sendStatus(200);})
+.get(cors.corsWithOptions, (req, res, next) => {
+    Controller.findOne({serial: req.params.serial})
+        .then(controller => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(controller);
+        }, err => next(err))
+        .catch(err => next(err));
+})
 
 module.exports = controllerRouter;
