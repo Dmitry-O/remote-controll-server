@@ -62,7 +62,7 @@ controllerRouter.route('/:serial')
         .then(controller => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(controller);
+            res.json(controller.relays);
         }, err => next(err))
         .catch(err => next(err));
 })
