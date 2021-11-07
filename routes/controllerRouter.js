@@ -20,7 +20,7 @@ controllerRouter.route('/')
         .catch(err => next(err));
 })
 .post(cors.corsWithOptions, (req, res, next) => {
-    Controller.findOne({serial: req.body.serial, password: req.body.password})
+    Controller.findOne({serial: req.body.serial})
         .then(controller => {
             if (!controller) {
                 Controller.create(req.body)
@@ -31,9 +31,15 @@ controllerRouter.route('/')
                     }, err => next(err))
                     .catch(err => next(err));
             } else {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json(controller);
+                if (controller.password === req.body.password) {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json(controller);
+                } else {
+                    const err = new Error("Passwords don't match");
+                    err.status = 403;
+                    throw err;
+                }
             }
         }, err => next(err))
         .catch(err => next(err));
