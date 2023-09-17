@@ -3,7 +3,7 @@ const cors = require('cors');
 const app = express();
 
 
-const whiteList = ['https://remote-controllers.web.app', 'http://localhost:3000'];
+const whiteList = ['https://remote-controllers.web.app', 'http://localhost:3001'];
 var corsOptionsDelegate = (req, callback) => {
     var corsOptions;
     if(whiteList.indexOf(req.header('Origin')) !== -1) {
